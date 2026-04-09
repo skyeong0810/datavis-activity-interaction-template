@@ -52,6 +52,21 @@ function App() {
 		d3.axisLeft(y)), [gx, y]);
 
 
+	const [selectedMovie, setSelectedMovie] = useState(null); // default: null
+	const handleClickPoint = (item) => {
+		console.log(item);
+
+		if (selectedMovie && selectedMovie.title === item.title) {
+			setSelectedMovie(null);
+		}
+		else {
+			setSelectedMovie(item);
+		}
+	}
+
+	const [hoveredMovie, setHoveredMovie] = useState(null);
+
+
 	// Render the chart.
 	return (
 		<>
@@ -76,7 +91,16 @@ function App() {
 												x(item.screens_total)}, ${
 												y(item.audience_total)})`}>
 										<circle cx="0" cy="0" r="3"
+											onClick={() => handleClickPoint(item)}
+											style={{fill:
+												selectedMovie == item ? 'red' : 'blue',
+												opacity:
+												selectedMovie != null && selectedMovie != item ? 0.1 : 1.0
+											}}
+											onMouseEnter={() => setHoveredMovie(item)}
+											onMouseLeave={() => setHoveredMovie(null)}
 										/>
+										{hoveredMovie ? <text>hoveredMovie.title</text> : ""}
 									</g>
 								);
 							})}
@@ -87,7 +111,7 @@ function App() {
 				<div id="selected-item-information">
 					<div className="panel-title">Selected Item:</div>
 					<div>
-
+						{selectedMovie != null ? selectedMovie.title : ""}
 					</div>
 				</div>
 			</div>
